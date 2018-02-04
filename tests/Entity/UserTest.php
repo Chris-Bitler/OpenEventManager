@@ -5,6 +5,10 @@ namespace App\Tests\Entity;
 use App\Entity\User;
 use \PHPUnit\Framework\TestCase;
 
+/**
+ * Unit tests for the User Entity Class
+ * @author Christopher Bitler
+ */
 class UserTest extends TestCase
 {
     const TEST_ID = 1;

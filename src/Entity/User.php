@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Chris
- * Date: 2/1/2018
- * Time: 3:44 PM
- */
-
 namespace App\Entity;
 
 /**
  * Storage for a user
  * @ORM\Entity
+ * @author Christopher Bitler
  */
 class User
 {
