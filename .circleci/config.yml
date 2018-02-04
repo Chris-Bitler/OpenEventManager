@@ -38,6 +38,6 @@ jobs:
           mkdir -p ~/phpunit
           vendor/bin/phpunit --log-junit ~/phpunit/junit.xml
       - store_test_results:
-        path: ~/phpunit
+          path: ~/phpunit
       - store_artifacts:
-        path: ~/phpunit
+          path: ~/phpunit
