@@ -6,6 +6,7 @@ namespace App\Tests\Service;
 
 use App\Service\UserService;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -20,9 +21,39 @@ class UserServiceTest extends TestCase
 
     public function testRegisterUserWithTakenUsernameShouldReturnRegisterFailedTaken()
     {
-        /** @var EntityRepository|MockInterface */
         $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
         $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $user = \Mockery::mock('App\Entity\User');
+        $repository->shouldReceive('findOneBy')->andReturn($user);
         $userService = new UserService($repository, $manager);
+
+        $registered = $userService->registerUser(self::TEST_USERNAME, self::TEST_PASSWORD, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_IP);
+
+        $this->assertEquals(UserService::REGISTER_FAILED_TAKEN, $registered);
+    }
+
+    public function testRegisterUserWithValidUsernameShouldCatchORMException()
+    {
+        $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
+        $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $repository->shouldReceive('findOneBy')->andReturn(null);
+        $manager->shouldReceive('persist')->andThrow(new ORMException());
+        $userService = new UserService($repository, $manager);
+
+        $registered = $userService->registerUser(self::TEST_USERNAME, self::TEST_PASSWORD, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_IP);
+
+        $this->assertEquals(UserService::REGISTER_FAILED_ERROR, $registered);
+    }
+
+    public function testRegisterUserWithValidUsernameCreateUserShouldReturnUserCreated()
+    {
+        $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
+        $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $repository->shouldReceive('findOneBy')->andReturn(null);
+        $userService = new UserService($repository, $manager);
+
+        $registered = $userService->registerUser(self::TEST_USERNAME, self::TEST_PASSWORD, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_IP);
+
+        $this->assertEquals(UserService::REGISTER_FAILED_ERROR, $registered);
     }
 }
