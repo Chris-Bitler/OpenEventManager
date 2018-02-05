@@ -17,6 +17,7 @@ class UserTest extends TestCase
     const TEST_IP = '127.0.0.1';
     const TEST_FIRST = 'FirstName';
     const TEST_LAST = 'LastName';
+    const TEST_EMAIL = 'test@test.com';
     const TEST_ROLE = 1;
 
     public function testGetIdShouldReturnId()
@@ -115,6 +116,22 @@ class UserTest extends TestCase
         $this->assertNotEquals($lastName, $user->getLastName());
     }
 
+    public function testGetEmailShouldReturnEmail()
+    {
+        $user = $this->generateTestUser();
+
+        $this->assertEquals(self::TEST_EMAIL, $user->getEmail());
+    }
+
+    public function testSetEmailShouldChangeEmail()
+    {
+        $user = $this->generateTestUser();
+        $email = $user->getEmail();
+        $user->setEmail('test@test2.com');
+
+        $this->assertNotEquals($email, $user->getEmail());
+    }
+
     public function testGetRoleShouldReturnRole()
     {
         $user = $this->generateTestUser();
@@ -132,7 +149,7 @@ class UserTest extends TestCase
     }
 
     private function generateTestUser() {
-        $user = new User(self::TEST_USERNAME, self::TEST_PASS, self::TEST_IP, self::TEST_FIRST, self::TEST_LAST, self::TEST_ROLE);
+        $user = new User(self::TEST_USERNAME, self::TEST_PASS, self::TEST_IP, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_ROLE);
         $user->setId(self::TEST_ID);
         return $user;
     }

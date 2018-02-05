@@ -32,6 +32,12 @@
     "doctrine/orm": {
         "version": "v2.6.0"
     },
+    "hamcrest/hamcrest-php": {
+        "version": "v2.0.0"
+    },
+    "mockery/mockery": {
+        "version": "1.0"
+    },
     "myclabs/deep-copy": {
         "version": "1.7.0"
     },

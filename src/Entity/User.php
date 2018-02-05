@@ -48,6 +48,12 @@ class User
 
     /**
      * @ORM\Column(type="string")
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string")
      * @var int
      */
     private $role;
@@ -59,15 +65,17 @@ class User
      * @param $lastIp string The last IP the user used
      * @param $firstName string The user's first name
      * @param $lastName string The user's last name
+     * @param $email string The user's email
      * @param $role int The user's role number
      */
-    public function __construct($username, $passwordHash, $lastIp, $firstName, $lastName, $role)
+    public function __construct($username, $passwordHash, $lastIp, $firstName, $lastName, $email, $role)
     {
         $this->username = $username;
         $this->passwordHash = $passwordHash;
         $this->lastIp = $lastIp;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->email = $email;
         $this->role = $role;
     }
 
@@ -177,6 +185,24 @@ class User
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+    }
+
+    /**
+     * Get the user's email
+     * @return string The user's email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set the user's email
+     * @param string $email The email to set
+     */
+    public function setEmail(string $email)
+    {
+        $this->email = $email;
     }
 
     /**
