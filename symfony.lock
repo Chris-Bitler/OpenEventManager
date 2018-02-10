@@ -1,4 +1,10 @@
 {
+    "datto/json-rpc": {
+        "version": "3.0.0"
+    },
+    "datto/json-rpc-simple": {
+        "version": "4.0.1"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -37,6 +43,9 @@
     },
     "mockery/mockery": {
         "version": "1.0"
+    },
+    "monolog/monolog": {
+        "version": "1.23.0"
     },
     "myclabs/deep-copy": {
         "version": "1.7.0"

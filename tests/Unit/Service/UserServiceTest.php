@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tests\Service;
+namespace App\Tests\Unit\Service;
 
 
 use App\Service\UserService;
@@ -51,9 +51,52 @@ class UserServiceTest extends TestCase
         $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
         $repository->shouldReceive('findOneBy')->andReturn(null);
         $userService = new UserService($repository, $manager);
-
+        $manager->shouldReceive('persist')->once();
+        $manager->shouldReceive('flush')->once();
         $registered = $userService->registerUser(self::TEST_USERNAME, self::TEST_PASSWORD, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_IP);
 
-        $this->assertEquals(UserService::REGISTER_FAILED_ERROR, $registered);
+        $this->assertEquals(UserService::USER_CREATED, $registered);
+    }
+
+    public function testLoginInUserDoesNotExistShouldReturnFailedNoUser()
+    {
+        $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
+        $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $repository->shouldReceive('findOneBy')->andReturn(null);
+        $userService = new UserService($repository, $manager);
+
+        $loginResult = $userService->loginUser(self::TEST_USERNAME, self::TEST_PASSWORD);
+
+        $this->assertEquals(UserService::LOGIN_FAILED_NO_USER, $loginResult);
+    }
+
+    public function testLoginInBadPasswordShouldReturnFailedBadPassword()
+    {
+        $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
+        $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $user = \Mockery::mock('App\Entity\User');
+        $repository->shouldReceive('findOneBy')->andReturn($user);
+        $user->shouldReceive('getPasswordHash')->andReturn("Bad-Password");
+        $userService = new UserService($repository, $manager);
+
+        $loginResult = $userService->loginUser(self::TEST_USERNAME, self::TEST_PASSWORD);
+
+        $this->assertEquals(UserService::LOGIN_FAILED_BAD_PASSWORD, $loginResult);
+    }
+
+    public function testLoginInSuccessfulShouldReturnLoginSucces()
+    {
+        $password = '1234';
+        $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
+        $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
+        $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $user = \Mockery::mock('App\Entity\User');
+        $repository->shouldReceive('findOneBy')->andReturn($user);
+        $user->shouldReceive('getPasswordHash')->andReturn($passwordHashed);
+        $userService = new UserService($repository, $manager);
+
+        $loginResult = $userService->loginUser(self::TEST_USERNAME, $password);
+
+        $this->assertEquals(UserService::LOGIN_SUCCESS, $loginResult);
     }
 }

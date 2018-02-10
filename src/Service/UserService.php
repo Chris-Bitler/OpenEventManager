@@ -39,12 +39,12 @@ class UserService
 
     /**
      * Register a user in the database
-     * @param $username string The user's username
-     * @param $password string The user's password
-     * @param $first string The user's first name
-     * @param $last string The user's last name
-     * @param $email string The user's email
-     * @param $ip string The user's ip
+     * @param string $username The user's username
+     * @param string $password The user's password
+     * @param string $first The user's first name
+     * @param string $last The user's last name
+     * @param string $email The user's email
+     * @param string $ip The user's ip
      * @return int USER_CREATED if user is created, or either of the REGISTER_FAILED constants if the user was not created
      */
     public function registerUser($username, $password, $first, $last, $email, $ip)
@@ -71,8 +71,8 @@ class UserService
 
     /**
      * Check to see if the user's provided password matches their recorded password
-     * @param $username string The user's username
-     * @param $password string The password that the user entered.
+     * @param string $username The user's username
+     * @param string $password The password that the user entered.
      * @return int LOGIN_SUCCESS if successfully logged in, otherwise one of the LOGIN_FAILED values depending on the
      *      condition
      */
