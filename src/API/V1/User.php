@@ -53,6 +53,12 @@ class User
      */
     public function register($username, $password, $first, $last, $email, $ip)
     {
+        if (!$username || !$password || !$first || !$last || !$email || !$ip) {
+            return array(
+                'error' => true,
+                'message' => 'Please fill out the entire registration form'
+            );
+        }
         $result = $this->userService->registerUser($username, $password, $first, $last, $email, $ip);
         if ($result == UserService::USER_CREATED) {
             return array(

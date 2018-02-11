@@ -68,6 +68,8 @@ class RegisterService {
             if(result.result === false) {
                 $("#register-notify").css("color", "red");
                 $("#register-notify").text("Username taken");
+            } else {
+                $("#register-notify").text("");
             }
         })
     }
