@@ -25,7 +25,7 @@ class UserServiceTest extends TestCase
         $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
         $user = \Mockery::mock('App\Entity\User');
         $repository->shouldReceive('findOneBy')->andReturn($user);
-        $userService = new UserService($repository, $manager);
+        $userService = new UserService($manager, $repository);
 
         $registered = $userService->registerUser(self::TEST_USERNAME, self::TEST_PASSWORD, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_IP);
 
@@ -38,7 +38,7 @@ class UserServiceTest extends TestCase
         $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
         $repository->shouldReceive('findOneBy')->andReturn(null);
         $manager->shouldReceive('persist')->andThrow(new ORMException());
-        $userService = new UserService($repository, $manager);
+        $userService = new UserService($manager, $repository);
 
         $registered = $userService->registerUser(self::TEST_USERNAME, self::TEST_PASSWORD, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_IP);
 
@@ -50,7 +50,7 @@ class UserServiceTest extends TestCase
         $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
         $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
         $repository->shouldReceive('findOneBy')->andReturn(null);
-        $userService = new UserService($repository, $manager);
+        $userService = new UserService($manager, $repository);
         $manager->shouldReceive('persist')->once();
         $manager->shouldReceive('flush')->once();
         $registered = $userService->registerUser(self::TEST_USERNAME, self::TEST_PASSWORD, self::TEST_FIRST, self::TEST_LAST, self::TEST_EMAIL, self::TEST_IP);
@@ -63,7 +63,7 @@ class UserServiceTest extends TestCase
         $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
         $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
         $repository->shouldReceive('findOneBy')->andReturn(null);
-        $userService = new UserService($repository, $manager);
+        $userService = new UserService($manager, $repository);
 
         $loginResult = $userService->loginUser(self::TEST_USERNAME, self::TEST_PASSWORD);
 
@@ -77,7 +77,7 @@ class UserServiceTest extends TestCase
         $user = \Mockery::mock('App\Entity\User');
         $repository->shouldReceive('findOneBy')->andReturn($user);
         $user->shouldReceive('getPasswordHash')->andReturn("Bad-Password");
-        $userService = new UserService($repository, $manager);
+        $userService = new UserService($manager, $repository);
 
         $loginResult = $userService->loginUser(self::TEST_USERNAME, self::TEST_PASSWORD);
 
@@ -93,7 +93,7 @@ class UserServiceTest extends TestCase
         $user = \Mockery::mock('App\Entity\User');
         $repository->shouldReceive('findOneBy')->andReturn($user);
         $user->shouldReceive('getPasswordHash')->andReturn($passwordHashed);
-        $userService = new UserService($repository, $manager);
+        $userService = new UserService($manager, $repository);
 
         $loginResult = $userService->loginUser(self::TEST_USERNAME, $password);
 
