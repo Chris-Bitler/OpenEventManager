@@ -6,7 +6,7 @@
  * Time: 8:54 AM
  */
 
-namespace Controller;
+namespace App\Controller;
 
 
 use Datto\JsonRpc\Server;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Main controller for the json-rpc api
- * @package Controller
+ * @author Christopher Bitler
  */
 class APIController extends Controller
 {
@@ -31,7 +31,7 @@ class APIController extends Controller
      */
     public function index(Request $request)
     {
-        $content = $this->get('request')->getContent();
+        $content = $request->getContent();
         $content = $this->replacePlaceholders($request, $content);
         $server = new Server(new Evaluator(new Mapper('App\\API\\V1')));
         $result = $server->reply($content);

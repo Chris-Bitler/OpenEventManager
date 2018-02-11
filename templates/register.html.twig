@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Register{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            <div id="register-notify"></div>
+            <form>
+                <label for="username-register">Username:</label><input type="text" id="username-register" name="username-register" /><br>
+                <label for="password-register">Password:</label><input type="password" id="password-register" name="password-register" /><br>
+                <!-- TODO: Add option to disable asking for name -->
+                <label for="first">First name:</label><input type="text" id="first" name="first" /><br>
+                <label for="last">Last name:</label><input type="text" id="last" name="last" /><br>
+                <label for="email">Email:</label><input type="text" id="email" name="email" /><br>
+                <input type="button" id="submit-register" value="Register"/>
+            </form>
+        {% endblock %}
+        {% block javascripts %}
+            <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/login/RegisterService.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>

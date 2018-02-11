@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Utility\Database;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
@@ -30,11 +31,15 @@ class UserService
     private $entityManager;
 
     public function __construct(
-        EntityRepository $repository,
-        EntityManager $entityManager
+        EntityManager $entityManager = null,
+        EntityRepository $repository = null
     ) {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
+        try {
+            $this->entityManager = $entityManager ?: (new Database())->createDoctrineObject();
+        } catch (ORMException $e) {
+            echo $e;
+        }
+        $this->repository = $repository ?: $this->entityManager->getRepository('App\Entity\User');
     }
 
     /**
@@ -67,6 +72,22 @@ class UserService
         } else {
             return self::REGISTER_FAILED_TAKEN;
         }
+    }
+
+    /**
+     * Get a user object based on the username
+     * @param string $username The user's name
+     * @return User|null The user object if the user exists, null otherwise
+     */
+    public function getUser($username)
+    {
+        $user = $this->repository->findOneBy(
+            array(
+                'username' => $username
+            )
+        );
+
+        return $user;
     }
 
     /**

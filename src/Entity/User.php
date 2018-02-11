@@ -1,10 +1,11 @@
 <?php
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * Storage for a user
  * @ORM\Entity
- * @author Christopher Bitler
+ * @ORM\Table(name="user")
  */
 class User
 {
