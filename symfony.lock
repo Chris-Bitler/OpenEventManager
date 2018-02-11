@@ -143,6 +143,9 @@
     "symfony/asset": {
         "version": "v4.0.4"
     },
+    "symfony/browser-kit": {
+        "version": "v4.0.4"
+    },
     "symfony/cache": {
         "version": "v4.0.3"
     },
@@ -163,6 +166,9 @@
     },
     "symfony/dependency-injection": {
         "version": "v4.0.3"
+    },
+    "symfony/dom-crawler": {
+        "version": "v4.0.4"
     },
     "symfony/dotenv": {
         "version": "v4.0.3"

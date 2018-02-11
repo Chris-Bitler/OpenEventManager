@@ -99,4 +99,27 @@ class UserServiceTest extends TestCase
 
         $this->assertEquals(UserService::LOGIN_SUCCESS, $loginResult);
     }
+
+    public function testGetUserNoSuchUserShouldReturnNull()
+    {
+        $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
+        $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $repository->shouldReceive('findOneBy')->andReturn(null);
+        $userService = new UserService($manager, $repository);
+
+        $result = $userService->getUser(self::TEST_USERNAME);
+        $this->assertNull($result);
+    }
+
+    public function testGetUserUserExistsShouldReturnUser()
+    {
+        $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
+        $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
+        $user = \Mockery::mock('App\Entity\User');
+        $repository->shouldReceive('findOneBy')->andReturn($user);
+        $userService = new UserService($manager, $repository);
+
+        $result = $userService->getUser(self::TEST_USERNAME);
+        $this->assertEquals($user, $result);
+    }
 }
