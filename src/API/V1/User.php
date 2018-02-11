@@ -73,7 +73,7 @@ class User
         } else {
             return array(
                 'error' => true,
-                'message' => 'An unknown error has occured during registration'
+                'message' => 'An unknown error has occurred during registration'
             );
         }
     }
