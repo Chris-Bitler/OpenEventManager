@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+    <style>
+        #error {
+            margin-left: auto;
+            margin-right: auto;
+            text-align:center;
+            margin-top: 200px;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    <div id='error'>
+        <h1>Page not found</h1>
+        <h3>If you are an administrator, check the error logs.</h3>
+    </div>
+{% endblock %}
+{% block javascripts %}{% endblock %}
+</body>
+</html>

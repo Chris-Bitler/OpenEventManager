@@ -45,13 +45,23 @@ class RegisterService {
 
         let client = new Client(window.location.protocol + "//" + window.location.host + "/api");
         client.request("user/register", request, function( result ) {
-           if(result.result.error === false) {
-               $("#register-notify").css("color", "green");
-               $("#register-notify").text(result.result.message);
-           } else {
-               $("#register-notify").css("color", "red");
-               $("#register-notify").text(result.result.message);
-           }
+            let notify = $("#register-notify");
+            notify.removeClass('hidden');
+            try {
+                if (result.result.error === false) {
+                    notify.removeClass('alert-danger');
+                    notify.addClass('alert-success');
+                    notify.text(result.result.message);
+                } else {
+                    notify.removeClass('alert-success');
+                    notify.addClass('alert-danger');
+                    notify.text(result.result.message);
+                }
+            } catch (err) {
+                notify.removeClass('alert-success');
+                notify.addClass('alert-danger');
+                notify.text("An unknown error has occurred during registration.");
+            }
         });
     }
 
@@ -65,11 +75,14 @@ class RegisterService {
         let client = new Client(window.location.protocol + "//" + window.location.host + "/api");
 
         client.request("user/checkUsernameAvailability", request, function ( result ) {
+            let notify = $("#register-notify");
             if(result.result === false) {
-                $("#register-notify").css("color", "red");
-                $("#register-notify").text("Username taken");
+                notify.removeClass('hidden');
+                notify.removeClass('alert-success');
+                notify.addClass('alert-danger');
+                notify.text("Username taken");
             } else {
-                $("#register-notify").text("");
+                notify.addClass('hidden');
             }
         })
     }

@@ -1,27 +1,40 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Register{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}
-            <div id="register-notify"></div>
-            <form>
-                <label for="username-register">Username:</label><input type="text" id="username-register" name="username-register" /><br>
-                <label for="password-register">Password:</label><input type="password" id="password-register" name="password-register" /><br>
-                <!-- TODO: Add option to disable asking for name -->
-                <label for="first">First name:</label><input type="text" id="first" name="first" /><br>
-                <label for="last">Last name:</label><input type="text" id="last" name="last" /><br>
-                <label for="email">Email:</label><input type="text" id="email" name="email" /><br>
-                <input type="button" id="submit-register" value="Register"/>
-            </form>
-        {% endblock %}
-        {% block javascripts %}
-            <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('js/login/RegisterService.js') }}"></script>
-        {% endblock %}
-    </body>
-</html>
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block stylesheets %}
+    <link href="css/register.css" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="container form-margins">
+        <div class="alert hidden" id="register-notify"></div>
+        <form class="register-form">
+            <div>
+                <label for="username-register">Username:</label>
+                <input id="username-register" name="username-register" class="form-control"/><br>
+            </div>
+            <div>
+                <label for="password-register">Password:</label>
+                <input type="password" id="password-register" name="password-register" class="form-control"/><br>
+            </div>
+            <!-- TODO: Add option to disable asking for name -->
+            <div>
+                <label for="first">First name:</label>
+                <input id="first" name="first" class="form-control" /><br>
+            </div>
+            <div>
+                <label for="last">Last name:</label>
+                <input id="last" name="last" class="form-control" /><br>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input id="email" name="email" class="form-control" /><br>
+            </div>
+            <input type="button" id="submit-register" value="Register" class="btn btn-primary"/>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/login/RegisterService.js') }}"></script>
+{% endblock %}
