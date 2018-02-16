@@ -8,8 +8,8 @@
 
 namespace App\API\V1;
 
+use App\Service\SessionService;
 use App\Service\UserService;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * API for creating, logging in, and checking data about users
@@ -20,13 +20,21 @@ class User
     /** @var UserService */
     private $userService;
 
+    /** @var SessionService */
+    private $sessionService;
+
     /**
      * Create a new instance of the User API
      * @param UserService|null $service The user service for interfacing with the database
+     * @param SessionService|null $sessionService Service for generating a new session
      */
-    public function __construct(UserService $service = null)
+    public function __construct(
+        UserService $service = null,
+        SessionService $sessionService = null
+    )
     {
         $this->userService = $service ?: new UserService();
+        $this->sessionService = $sessionService ?: new SessionService();
     }
 
     /**
@@ -90,7 +98,7 @@ class User
     {
         $result = $this->userService->loginUser($username, $password);
         if ($result == UserService::LOGIN_SUCCESS) {
-            $session = new Session();
+            $session = $this->sessionService->getNewSession();
             if(!$session->isStarted()) $session->start();
             $session->set('username', $username);
 
