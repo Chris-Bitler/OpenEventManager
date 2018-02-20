@@ -1,1 +1,9 @@
 {% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container form-margins">
+        {% if username is defined %}
+            {{ username|escape }}
+        {% endif %}
+    </div>
+{% endblock %}
