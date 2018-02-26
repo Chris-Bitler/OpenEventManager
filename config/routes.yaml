@@ -16,6 +16,11 @@ login:
 index:
   path: /
   controller: App\Controller\IndexController::index
+
+theming:
+  path: /admin/theming
+  controller: App\Controller\ThemingController::index
+
 _errors:
     resource: '@TwigBundle/Resources/config/routing/errors.xml'
     prefix:   /_error

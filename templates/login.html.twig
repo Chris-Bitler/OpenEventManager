@@ -2,10 +2,20 @@
 
 {% block title %}Login{% endblock %}
 {% block stylesheets %}
+    {{ parent() }}
     <link href="css/login.css" rel="stylesheet">
 {% endblock %}
 {% block body %}
     <div class="container form-margins">
+        <h1 class="mt-4 mb-3">Login
+        </h1>
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Login</li>
+        </ol>
         <div class="alert hidden" id="login-notify"></div>
         <form class="login-form">
             <div>
@@ -17,11 +27,11 @@
                 <input type="password" id="password-login" name="password-login" class="form-control"/><br>
             </div>
             <input type="button" id="submit-login" value="Log in" class="btn btn-primary"/>
+            <small><a href="/register">Or click here to register</a></small>
         </form>
     </div>
 {% endblock %}
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
+    {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/login/LoginService.js') }}"></script>
 {% endblock %}

@@ -1,28 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Chris
- * Date: 2/13/2018
- * Time: 10:05 AM
- */
 
 namespace App\Controller;
 
-
-use App\Service\SessionService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-class IndexController extends Controller
+/**
+ * Controller on the main page of the site
+ * @author Christopher Bitler
+ */
+class IndexController extends UserController
 {
     public function index() {
-        $session = (new SessionService())->getNewSession();
-        if (!$session->isStarted()) $session->start();
-        if ($session->get('username')) {
-            return $this->render('index.html.twig', array(
-                'username' => $session->get('username')
-            ));
-        } else {
-            return $this->render('index.html.twig');
-        }
+        parent::setupUser();
+        return $this->render('index.html.twig', $this->getTemplateVariables());
     }
 }

@@ -11,14 +11,24 @@
     <title>{% block title %}{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('css/ext/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/modern-business.css" rel="stylesheet">
+    <link href="{{ asset('css/ext/modern-business.css') }}" rel="stylesheet">
 
-    <link href="css/extra.css" rel="stylesheet">
+    <link href="{{ asset('css/extra.css') }}" rel="stylesheet">
 
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+    <style>
+        .bg-dark {
+            /*Override the default color with the theme color*/
+            background-color: {{ theme.color }};
+        }
+        .nav-item > .nav-link, footer > .container > p, .navbar-brand {
+            color: rgb({{ theme.textColor }},{{ theme.textColor }},{{ theme.textColor }}) !important;
+        }
+    </style>
+    {% endblock %}
 
 </head>
 
@@ -27,28 +37,51 @@
 <!-- Navigation -->
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="index.html">Open Event Manager</a>
+        <a class="navbar-brand" id="navbar-brand" href="/">{{ theme.siteName }}</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="about.html">One</a>
+                    <a class="nav-link" href="about.html">Teams</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="services.html">Two</a>
+                    <a class="nav-link" href="services.html">Tournaments</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Three</a>
+                    <a class="nav-link" href="contact.html">Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <div style="width:30px;"></div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPortfolio" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
+                        <div style="display: inline;  margin-left: 10px;">
+                            {% if username is defined %}
+                                <img src='{{ asset('img/placeholder.png') }}' height="20px" width="20px">
+                                {{ username|e }}
+                            {%  else %}
+                                Log in
+                            {% endif %}
+                        </div>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
-                        <a class="dropdown-item" href="portfolio-1-col.html">1 Column Page</a>
-                    </div>
+
+                    {% if username is defined %}
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
+                            <a class="dropdown-item" href="portfolio-1-col.html">Settings</a>
+                            {% if role is defined %}
+                                {% if role == 5 %}
+                                    <a class="dropdown-item" href="/admin/theming">Admin</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
+                            <a class="dropdown-item" href="/login">Login</a>
+                            <a class="dropdown-item" href="/register">Register</a>
+                        </div>
+                    {% endif %}
                 </li>
             </ul>
         </div>
@@ -65,12 +98,11 @@
     <!-- /.container -->
 </footer>
 
-<!-- Bootstrap core JavaScript -->
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-
-{% block javascripts %}{% endblock %}
-
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
+{% endblock %}
 </body>
 
 </html>

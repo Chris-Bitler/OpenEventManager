@@ -1,4 +1,7 @@
 {
+    "components/jquery": {
+        "version": "3.2.1"
+    },
     "datto/json-rpc": {
         "version": "3.0.0"
     },
@@ -40,6 +43,9 @@
     },
     "hamcrest/hamcrest-php": {
         "version": "v2.0.0"
+    },
+    "itsjavi/bootstrap-colorpicker": {
+        "version": "2.5.1"
     },
     "mockery/mockery": {
         "version": "1.0"

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        let originalColor = "{{ theme.color }}";
+        let originalTextColor = "{{ theme.textColor }}"
+        let originalSiteName = "{{ theme.siteName }}"
+    </script>
+    <script type="text/javascript" src="{{ asset('js/admin/ThemingService.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-colorpicker.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.js" integrity="sha256-CMbY8O/nsUqZQgyh7wMVktFXm31lLdWlCkl86V2eSCg=" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container form-margins">
+        <!-- Page Heading/Breadcrumbs -->
+        <h1 class="mt-4 mb-3">Admin
+            <small>Theming</small>
+        </h1>
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/admin">Admin</a>
+            </li>
+            <li class="breadcrumb-item active">Theming</li>
+        </ol>
+
+        <div id="update-notify" class="alert"></div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Theme Color</h2>
+            </div>
+            <div class="card-block card-block-inner">
+                <div id="picker" class="input-group colorpicker-component">
+                    <form>
+                        <label for="theme-color">Background color:</label>
+                        <input type="text" name='theme-color' id='theme-color' value="{{ theme.color }}" class="form-control"/>
+                        <span class="input-group-addon"><i></i></span>
+                        <label for="color-slider-txt" class="move-down">Text color:</label><br/>
+                        <div class="slider-move-up">
+                            <input id="color-slider-txt" data-slider-id="color-slider" type="text" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="255"/>
+                        </div>
+                        <div class="theming-buttons">
+                            <input type="button" id="color-picker-button" class="btn btn-primary" value="Update theme color">
+                            <input type="button" id="color-reset-button" class="btn btn-primary" value="Reset color">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h2>Site Name</h2>
+            </div>
+            <div class="card-block card-block-inner">
+                <form style="width: 285.5px">
+                    <label>Site name:</label>
+                    <input type="text" class="form-control" id="site-name" />
+                    <div class="theming-buttons">
+                        <input type="button" class="btn btn-primary" value="Update" id="name-button">
+                        <input type="button" id="name-reset-button" class="btn btn-primary" value="Reset name">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ext/bootstrap-colorpicker.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.css" integrity="sha256-qkeO+BtgpANRnm6UfrclSLyB+QdfOK4qtspUK6qpnGk=" crossorigin="anonymous" />
+{% endblock %}
