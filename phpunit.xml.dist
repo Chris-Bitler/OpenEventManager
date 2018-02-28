@@ -25,8 +25,14 @@
 
     <filter>
         <whitelist>
-            <directory>./src/</directory>
+            <directory>./src/API</directory>
+            <directory>./src/Entity</directory>
+            <directory>./src/Service</directory>
         </whitelist>
+        <blacklist>
+            <directory suffix=".php">./src/Controller</directory>
+            <directory suffix=".php">./src/Utility</directory>
+        </blacklist>
     </filter>
 
     <listeners>
