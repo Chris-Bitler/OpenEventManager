@@ -71,6 +71,8 @@ class SettingsService
      * Insert a setting
      * @param string $key The key for the setting
      * @param string $value The value for the setting
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function insertSetting($key, $value)
     {
