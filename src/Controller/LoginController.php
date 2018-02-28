@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Controller;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * Controller for the login page
  * @author Christopher Bitler
  */
-class LoginController extends Controller
+class LoginController extends UserController
 {
     public function index() {
-        return $this->render('login.html.twig');
+        parent::setupUser();
+        return $this->render('login.html.twig', $this->getTemplateVariables());
     }
 }

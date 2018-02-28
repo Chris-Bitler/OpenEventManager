@@ -33,7 +33,8 @@ class UserService
     public function __construct(
         EntityManager $entityManager = null,
         EntityRepository $repository = null
-    ) {
+    )
+    {
         try {
             $this->entityManager = $entityManager ?: (new Database())->createDoctrineObject();
         } catch (ORMException $e) {

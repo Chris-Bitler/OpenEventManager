@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Chris
- * Date: 2/8/2018
- * Time: 8:47 AM
- */
 
 namespace App\API\V1;
 
+use App\Service\SessionService;
 use App\Service\UserService;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * API for creating, logging in, and checking data about users
@@ -20,13 +14,21 @@ class User
     /** @var UserService */
     private $userService;
 
+    /** @var SessionService */
+    private $sessionService;
+
     /**
      * Create a new instance of the User API
      * @param UserService|null $service The user service for interfacing with the database
+     * @param SessionService|null $sessionService Service for generating a new session
      */
-    public function __construct(UserService $service = null)
+    public function __construct(
+        UserService $service = null,
+        SessionService $sessionService = null
+    )
     {
         $this->userService = $service ?: new UserService();
+        $this->sessionService = $sessionService ?: new SessionService();
     }
 
     /**
@@ -54,27 +56,15 @@ class User
     public function register($username, $password, $first, $last, $email, $ip)
     {
         if (!$username || !$password || !$first || !$last || !$email || !$ip) {
-            return array(
-                'error' => true,
-                'message' => 'Please fill out the entire registration form'
-            );
+            return $this->generateReturnArray(true, 'Please fill out the entire registration form');
         }
         $result = $this->userService->registerUser($username, $password, $first, $last, $email, $ip);
         if ($result == UserService::USER_CREATED) {
-            return array(
-                'error' => false,
-                'message' => 'User Registered'
-            );
+            return $this->generateReturnArray(false, 'User Registered');
         } elseif ($result == UserService::REGISTER_FAILED_TAKEN) {
-            return array(
-                'error' => true,
-                'message' => 'Username taken'
-            );
+            return $this->generateReturnArray(true, 'Username taken');
         } else {
-            return array(
-                'error' => true,
-                'message' => 'An unknown error has occurred during registration'
-            );
+            return $this->generateReturnArray(true, 'An unknown error has occurred during registration');
         }
     }
 
@@ -90,24 +80,34 @@ class User
     {
         $result = $this->userService->loginUser($username, $password);
         if ($result == UserService::LOGIN_SUCCESS) {
-            $session = new Session();
+            $session = $this->sessionService->getNewSession();
             if(!$session->isStarted()) $session->start();
-            $session->set('username', $username);
+            $userFromDatabase = $this->userService->getUser($username);
+            $user = array(
+                'username' => $userFromDatabase->getUsername(),
+                'role' => $userFromDatabase->getRole()
+            );
+            $session->set('user', $user);
 
-            return array(
-                'error' => false,
-                'message' => 'Login successful'
-            );
+            return $this->generateReturnArray(false, 'Login successful');
         } else if ($result == UserService::LOGIN_FAILED_NO_USER) {
-            return array(
-                'error' => true,
-                'message' => 'No such user exists'
-            );
+            return $this->generateReturnArray(true, 'No such user exists');
         } else {
-            return array(
-                'error' => true,
-                'message' => 'Bad password'
-            );
+            return $this->generateReturnArray(true, 'Bad password');
         }
+    }
+
+    /**
+     * Generate an array to be returned from the API
+     * @param bool $error True if it is an error, false if not
+     * @param string $message The message to return
+     * @return array The generated values for returning from the API
+     */
+    private function generateReturnArray($error, $message)
+    {
+        return array(
+            'error' => $error,
+            'message' => $message
+        );
     }
 }

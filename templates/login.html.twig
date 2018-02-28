@@ -1,23 +1,37 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Login{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}
-            <div id="login-notify"></div>
-            <form>
-                <label for="username-login">Username:</label><input type="text" id="username-login" name="username-login" /><br>
-                <label for="password-login">Password:</label><input type="password" id="password-login" name="password-login" /><br>
-                <input type="button" id="submit-login" value="Log in" />
-            </form>
-        {% endblock %}
-        {% block javascripts %}
-            <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('js/login/LoginService.js') }}"></script>
-        {% endblock %}
-    </body>
-</html>
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="css/login.css" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="container form-margins">
+        <h1 class="mt-4 mb-3">Login
+        </h1>
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Login</li>
+        </ol>
+        <div class="alert hidden" id="login-notify"></div>
+        <form class="login-form">
+            <div>
+                <label for="username-login">Username:</label>
+                <input id="username-login" name="username-login" class="form-control"/><br>
+            </div>
+            <div>
+                <label for="password-login">Password:</label>
+                <input type="password" id="password-login" name="password-login" class="form-control"/><br>
+            </div>
+            <input type="button" id="submit-login" value="Log in" class="btn btn-primary"/>
+            <small><a href="/register">Or click here to register</a></small>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/login/LoginService.js') }}"></script>
+{% endblock %}

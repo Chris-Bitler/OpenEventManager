@@ -4,8 +4,50 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "18e75591166fe673c93cac152f105fd8",
+    "content-hash": "ef22fd6ab3c45b840e6d93c16ee91ad5",
     "packages": [
+        {
+            "name": "components/jquery",
+            "version": "3.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/jquery.git",
+                "reference": "e5534d4ab8e80c159553d507e358ed20a806d3bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jquery/zipball/e5534d4ab8e80c159553d507e358ed20a806d3bf",
+                "reference": "e5534d4ab8e80c159553d507e358ed20a806d3bf",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "jquery.js"
+                    ],
+                    "files": [
+                        "jquery.min.js",
+                        "jquery.min.map",
+                        "jquery.slim.js",
+                        "jquery.slim.min.js",
+                        "jquery.slim.min.map"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JS Foundation and other contributors"
+                }
+            ],
+            "description": "jQuery JavaScript Library",
+            "homepage": "http://jquery.com",
+            "time": "2017-03-21T07:01:49+00:00"
+        },
         {
             "name": "datto/json-rpc",
             "version": "3.0.0",
@@ -753,6 +795,37 @@
                 "test"
             ],
             "time": "2016-01-20T08:20:44+00:00"
+        },
+        {
+            "name": "itsjavi/bootstrap-colorpicker",
+            "version": "2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/itsjavi/bootstrap-colorpicker.git",
+                "reference": "db978b4d8c3436cdaed6e3a1a065f9f47bb686b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/itsjavi/bootstrap-colorpicker/zipball/db978b4d8c3436cdaed6e3a1a065f9f47bb686b1",
+                "reference": "db978b4d8c3436cdaed6e3a1a065f9f47bb686b1",
+                "shasum": ""
+            },
+            "require": {
+                "components/jquery": ">=1.10"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache License Version 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Javier Aguilar",
+                    "homepage": "https://itsjavi.com"
+                }
+            ],
+            "description": "Fancy and customizable colorpicker plugin for Twitter Bootstrap",
+            "time": "2017-02-05T18:59:49+00:00"
         },
         {
             "name": "mockery/mockery",

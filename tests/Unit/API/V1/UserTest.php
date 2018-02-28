@@ -113,6 +113,25 @@ class UserTest extends TestCase
         $this->assertEquals(self::BAD_PASSWORD_ERROR, $result['message']);
     }
 
+    public function testLoginUserLoginSuccessShouldCreateSessionAndSetUsername()
+    {
+        $userService = \Mockery::mock('App\Service\UserService');
+        $sessionService = \Mockery::mock('App\Service\SessionService');
+        $session = \Mockery::mock('Symfony\Component\HttpFoundation\Session\Session');
+        $user = new \App\Entity\User("test","test","test","test","test","test",1);
+        $userService->shouldReceive('loginUser')->andReturn(UserService::LOGIN_SUCCESS);
+        $sessionService->shouldReceive('getNewSession')->andReturn($session);
+        $session->shouldReceive('isStarted')->andReturn(false);
+        $session->shouldReceive('start')->once();
+        $session->shouldReceive('set')->once();
+        $userService->shouldReceive("getUser")->andReturn($user);
+        $userApi = new User($userService, $sessionService);
+
+        $result = $userApi->login(self::TEST_USERNAME, self::TEST_PASSWORD);
+        $this->assertFalse($result['error']);
+        $this->assertEquals(self::LOGIN_SUCCESS, $result['message']);
+    }
+
     /**
      * TODO: Add Login Success test.. Need a better way to unit test session creation
      */

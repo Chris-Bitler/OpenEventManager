@@ -27,14 +27,24 @@ class LoginService {
 
         let client = new Client(window.location.protocol + "//" + window.location.host + "/api");
         client.request("user/login", request, function( result ) {
-            if(result.result.error === false) {
-                $("#login-notify").css("color", "green");
-                $("#login-notify").text(result.result.message);
-            } else {
-                $("#login-notify").css("color", "red");
-                $("#login-notify").text(result.result.message);
+            let notify = $("#login-notify");
+            notify.removeClass('hidden');
+            try {
+                if (result.result.error === false) {
+                    notify.removeClass('alert-danger');
+                    notify.addClass('alert-success');
+                    notify.text(result.result.message);
+                } else {
+                    notify.removeClass('alert-success');
+                    notify.addClass('alert-danger');
+                    notify.text(result.result.message);
+                }
+            } catch (err) {
+                notify.removeClass('alert-success');
+                notify.addClass('alert-danger');
+                notify.text("An unknown error has occurred during login.");
             }
-        })
+        });
     }
 }
 

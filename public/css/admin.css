@@ -1,0 +1,35 @@
+#color-picker-button {
+    margin-right: 10px;
+}
+
+.theming-buttons {
+    margin-top: 5px;
+}
+
+#color-slider > div.slider-track {
+    background: white; /* For browsers that do not support gradients */
+    background: linear-gradient(90deg,black, white); /* Standard syntax (must be last) */
+}
+#color-slider > div > div.slider-selection {
+    background: rgba(0,0,0,0);
+}
+
+.slider-move-up {
+    margin-top: -10px;
+}
+
+.card-block-inner {
+    margin: 10px 0 10px 10px;
+}
+
+.width-33 {
+    width: 33%;
+}
+
+.move-down {
+    margin-top: 10px;
+}
+
+#name-reset-button {
+    float: right;
+}
