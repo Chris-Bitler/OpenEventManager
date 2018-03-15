@@ -10,6 +10,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class SessionService
 {
+    /**
+     * Generate a new session
+     * @return Session
+     */
     public function getNewSession()
     {
         return new Session();
