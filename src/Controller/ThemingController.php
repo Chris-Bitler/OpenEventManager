@@ -4,8 +4,17 @@ namespace App\Controller;
 
 use App\Service\SessionService;
 
+/**
+ * Controller for the theming page
+ * @author Christopher Bitler
+ */
 class ThemingController extends UserController
 {
+    /**
+     * Render the theming page, or redirect if they are not an admin
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|
+     *              \Symfony\Component\HttpFoundation\Response
+     */
     public function index() {
         parent::setupUser();
         $sessionService = new SessionService();

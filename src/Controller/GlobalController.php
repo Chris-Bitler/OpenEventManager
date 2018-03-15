@@ -6,6 +6,11 @@ namespace App\Controller;
 use App\Service\SettingsService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+/**
+ * This class injects some 'global' (such as theming) variables
+ * into the template variables for the controller
+ * @author Christopher Bitler
+ */
 class GlobalController extends Controller
 {
     const DEFAULT_COLOR = '#343a40';
@@ -14,6 +19,10 @@ class GlobalController extends Controller
 
     private $templateVariables = array();
 
+    /**
+     * Set up global variables in the template variables such as
+     * theme color, text color, and name
+     */
     public function setupGlobalVariables() {
         $settingsService = new SettingsService();
         $themeColor = $settingsService->getSetting('theme.color') ?: self::DEFAULT_COLOR;
