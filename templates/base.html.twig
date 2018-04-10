@@ -102,6 +102,11 @@
     <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/moment-timezone.js') }}"></script>
+    <script type="text/javascript">
+        let timeZone = '{{ dateTimezone }}';
+    </script>
 {% endblock %}
 </body>
 

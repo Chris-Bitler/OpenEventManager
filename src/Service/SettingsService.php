@@ -18,6 +18,11 @@ class SettingsService
     private $entityManager;
     private $repository;
 
+    /**
+     * Create a new SettingsService instance
+     * @param EntityManager|null $entityManager The Doctrine Entity Manager
+     * @param EntityRepository|null $repository The Doctrine Entity Repository
+     */
     public function __construct(
         EntityManager $entityManager = null,
         EntityRepository $repository = null

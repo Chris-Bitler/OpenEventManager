@@ -30,6 +30,11 @@ class UserService
     /** @var EntityManager */
     private $entityManager;
 
+    /**
+     * Create a new UserService instance
+     * @param EntityManager|null $entityManager The Doctrine Entity Manager
+     * @param EntityRepository|null $repository The Doctrine Entity Repository
+     */
     public function __construct(
         EntityManager $entityManager = null,
         EntityRepository $repository = null
