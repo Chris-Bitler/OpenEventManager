@@ -2,6 +2,9 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript">
+        let curTimezone = '{{ curTimezone }}';
+    </script>
     <script type="text/javascript" src="{{ asset('js/admin/ScheduleService.js') }}"></script>
 {% endblock %}
 
@@ -22,7 +25,7 @@
         <div id="update-notify" class="alert"></div>
 
         <div class="col-sm-12">
-            <table class="table">
+            <table class="table" id="schedule-table">
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">Description</th>
@@ -37,17 +40,26 @@
                             <td id="dateString-{{ item.id }}" data->{{ item.dateTimeString }}</td>
                             <td>
                                 <button id='edit-{{ item.id }}' data-id="{{ item.id }}" type="button" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-cog"></span>
+                                    <i class='fas fa-edit'></i>
                                 </button>
                                 <button id='delete-{{ item.id }}' data-id="{{ item.id }}" type="button" class="btn btn-danger">
-                                    <span class="glyphicon glyphicon-trash"></span>
+                                    <i class='fas fa-trash'></i>
                                 </button>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <h3 id="add-item-link" class="add-item">Add schedule item</h3>
+            <button type="button" id="add-item-btn" class="btn btn-primary btn-lg">Add schedule item</button>
+
+            <br><br>
+            <h5>Update Timezone</h5>
+            <select style="width:20%; margin-bottom: 10px" id="timezone">
+                {% for key in timezones|keys %}
+                    <option value="{{ key }}">{{ key }}</option>
+                {% endfor %}
+            </select><br>
+            <button type="button" id="update-timezone-btn" class="btn btn-default">Update timezone</button>
         </div>
         <br>
     </div>
@@ -96,7 +108,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="edit-item-modal-confirm" class="btn btn-primary">Add Item</button>
+                    <button type="button" id="item-edit-modal-confirm" class="btn btn-primary">Edit Item</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -119,7 +131,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="delete-item-modal-confirm" class="btn btn-primary">Delete</button>
+                    <button type="button" id="item-delete-modal-confirm" class="btn btn-danger">Delete</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>

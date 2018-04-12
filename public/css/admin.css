@@ -37,3 +37,7 @@
 #name-reset-button {
     float: right;
 }
+
+[id^="dateString"],[id^="description"] {
+    vertical-align: middle !important;
+}

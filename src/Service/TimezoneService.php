@@ -44,7 +44,7 @@ class TimezoneService
     public function convertEpochToTimeString($timestamp)
     {
         $dateTime = new DateTime($timestamp, new DateTimeZone($this->getCurrentTimezone()));
-        return $dateTime->format(ScheduleController::dateFormat);
+        return $dateTime->format(ScheduleController::DATE_FORMAT);
     }
 
     /**
@@ -54,6 +54,15 @@ class TimezoneService
     public function getCurrentTimezone()
     {
         return $this->settingsService->getSetting('date.timezone') ?: 'America/New_York';
+    }
+
+    /**
+     * Get the list of available timezones
+     * @return array List of available timezones
+     */
+    public function getTimezones()
+    {
+        return $this->timezoneList;
     }
 
     /**
@@ -77,7 +86,7 @@ class TimezoneService
      */
     public function convertPHPTimezoneToFriendly($timezone)
     {
-        foreach($this->timestampList as $friendly => $php) {
+        foreach($this->timezoneList as $friendly => $php) {
             if ($php === $timezone) {
                 return $friendly;
             }
@@ -85,26 +94,50 @@ class TimezoneService
         throw new Exception('No matching timezone found.');
     }
 
-    private $timestampList = array (
+    /**
+     * Get the php version of a user friendly timezone
+     * @param string $friendlyTimezone The user friendly timezone to use
+     * @return string The php timezone
+     */
+    public function getPHPTimezone($friendlyTimezone)
+    {
+        return $this->timezoneList[$friendlyTimezone];
+    }
+
+    /**
+     * Checks to see if the timezone is a valid timezone
+     * @param string $timezone The timezone to check
+     * @return bool True if the timezone is valid, false otherwise
+     */
+    public function isValidTimezone($timezone)
+    {
+        return $this->timezoneList[$timezone] !== null;
+    }
+
+
+    /**
+     * This came from https://gist.github.com/kulbakin/7498458
+     */
+    private $timezoneList = array (
     '(UTC-11:00) Midway Island' => 'Pacific/Midway',
     '(UTC-11:00) Samoa' => 'Pacific/Samoa',
     '(UTC-10:00) Hawaii' => 'Pacific/Honolulu',
     '(UTC-09:00) Alaska' => 'US/Alaska',
-    '(UTC-08:00) Pacific Time (US &amp; Canada)' => 'America/Los_Angeles',
+    '(UTC-08:00) Pacific Time (US & Canada)' => 'America/Los_Angeles',
     '(UTC-08:00) Tijuana' => 'America/Tijuana',
     '(UTC-07:00) Arizona' => 'US/Arizona',
     '(UTC-07:00) Chihuahua' => 'America/Chihuahua',
     '(UTC-07:00) La Paz' => 'America/Chihuahua',
     '(UTC-07:00) Mazatlan' => 'America/Mazatlan',
-    '(UTC-07:00) Mountain Time (US &amp; Canada)' => 'US/Mountain',
+    '(UTC-07:00) Mountain Time (US & Canada)' => 'US/Mountain',
     '(UTC-06:00) Central America' => 'America/Managua',
-    '(UTC-06:00) Central Time (US &amp; Canada)' => 'US/Central',
+    '(UTC-06:00) Central Time (US & Canada)' => 'US/Central',
     '(UTC-06:00) Guadalajara' => 'America/Mexico_City',
     '(UTC-06:00) Mexico City' => 'America/Mexico_City',
     '(UTC-06:00) Monterrey' => 'America/Monterrey',
     '(UTC-06:00) Saskatchewan' => 'Canada/Saskatchewan',
     '(UTC-05:00) Bogota' => 'America/Bogota',
-    '(UTC-05:00) Eastern Time (US &amp; Canada)' => 'US/Eastern',
+    '(UTC-05:00) Eastern Time (US & Canada)' => 'US/Eastern',
     '(UTC-05:00) Indiana (East)' => 'US/East-Indiana',
     '(UTC-05:00) Lima' => 'America/Lima',
     '(UTC-05:00) Quito' => 'America/Bogota',

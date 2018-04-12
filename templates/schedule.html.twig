@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/admin/ScheduleService.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container form-margins">
+        <!-- Page Heading/Breadcrumbs -->
+        <h1 class="mt-4 mb-3">Schedule</h1>
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Schedule</li>
+        </ol>
+
+        <div class="col-sm-12">
+            <h3 style="margin-bottom: 10px">Event Schedule</h3>
+            <table class="table" id="schedule-table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col" style="width:75%">Description</th>
+                    <th scope="col">Date</th>
+                </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    {% for item in items %}
+                        <tr id="row-{{ item.id }}">
+                            <td id="description-{{ item.id }}">{{ item.description }}</td>
+                            <td id="dateString-{{ item.id }}" data-><b>{{ item.dateTimeString }}</b></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+         </div>
+        <br>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ext/bootstrap-colorpicker.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.css" integrity="sha256-qkeO+BtgpANRnm6UfrclSLyB+QdfOK4qtspUK6qpnGk=" crossorigin="anonymous" />
+{% endblock %}

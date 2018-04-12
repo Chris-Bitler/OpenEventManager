@@ -1,10 +1,10 @@
 <?php
 
-//TODO: Need to add security to endpoint
 namespace App\API\V1\Admin;
 
-
 use App\Service\ScheduleService;
+use App\Service\SessionService;
+use App\Service\TimezoneService;
 
 /**
  * API for interacting with the schedule system
@@ -12,17 +12,41 @@ use App\Service\ScheduleService;
  */
 class Schedule
 {
+    const NOT_AUTHORIZED = 'Not authorized to access this endpoint';
+    const EVENT_IN_PAST = 'You cannot insert an event in the past';
+    const ITEM_ADDED = 'Schedule Item Added';
+    const ITEM_NOT_EXIST = 'Item does not exist';
+    const ITEM_REMOVED = 'Item successfully removed';
+    const UPDATE_FAILED = 'Updating schedule item failed';
+    const UPDATE_SUCCESS = 'Schedule item updated';
+    const INVALID_TIMEZONE = 'Invalid timezone selected';
+    const TIMEZONE_UPDATED = 'Timezone updated';
+
     /** @var ScheduleService */
     private $scheduleService;
 
+    /** @var SessionService */
+    private $sessionService;
+
+    /** @var TimezoneService */
+    private $timezoneService;
+
     /**
      * Create a new Schedule API Object
-     * @param ScheduleService $scheduleService Service for
+     * @param ScheduleService|null $scheduleService Service for
      *          interacting with the scheduling system
+     * @param SessionService|null $sessionService Service for getting user sessions
+     * @param TimezoneService|null $timezoneService Service for updating timezone
      */
-    public function __construct(ScheduleService $scheduleService)
-    {
-        $this->scheduleService = $scheduleService;
+    public function __construct(
+        ScheduleService $scheduleService = null,
+        SessionService $sessionService = null,
+        TimezoneService $timezoneService = null
+    ) {
+        $this->scheduleService = $scheduleService ?: new ScheduleService();
+        $this->sessionService = $sessionService ?: new SessionService();
+        $this->timezoneService = $timezoneService ?: new TimezoneService();
+        $this->timezoneService->setScheduleService($this->scheduleService);
     }
 
     /**
@@ -73,21 +97,44 @@ class Schedule
      */
     public function addItem($description, $dateTime)
     {
-        $result = $this->scheduleService->addItemToSchedule($description, $dateTime);
-        if ($result == ScheduleService::INSERT_FAILED_IN_PAST) {
-            return $this->generateReturnArray(true, 'You cannot insert an event in the past');
-        }
+        $session = $this->sessionService->getNewSession();
+        if (!$session->isStarted()) $session->start();
+        $user = $session->get('user');
+        if ($user && $user['role'] == 5) {
+            $result = $this->scheduleService->addItemToSchedule($description, $dateTime);
+            if (is_int($result)  && $result == ScheduleService::INSERT_FAILED_IN_PAST) {
+                return $this->generateReturnArray(true, self::EVENT_IN_PAST);
+            }
 
-        return $this->generateReturnArray(false, 'Schedule Item Added', array(
-            'id' => $result->getId(),
-            'dateTimeString' => $result->getDateTimeString(),
-            'description' => $result->getDescription()
-        ));
+            return $this->generateReturnArray(false, self::ITEM_ADDED, array(
+                'id' => $result->getId(),
+                'dateTimeString' => $result->getDateTimeString(),
+                'description' => $result->getDescription()
+            ));
+        } else {
+            return $this->generateReturnArray(true, self::NOT_AUTHORIZED);
+        }
     }
 
     public function updateItem($id, $description, $eventDateTime)
     {
-        $this->scheduleService->update($description, $eventDateTime, $id);
+        $session = $this->sessionService->getNewSession();
+        if (!$session->isStarted()) $session->start();
+        $user = $session->get('user');
+        if ($user && $user['role'] == 5) {
+            $result = $this->scheduleService->update($description, $eventDateTime, $id);
+            if(is_int($result) && $result == ScheduleService::UPDATE_FAILED) {
+                return $this->generateReturnArray(true, self::UPDATE_FAILED);
+            } else {
+                return $this->generateReturnArray(false, self::UPDATE_SUCCESS,array(
+                    'dateTimeString' => $result->getDateTimeString(),
+                    'description' => $result->getDescription(),
+                    'id' => $result->getId()
+                ));
+            }
+        } else {
+            return $this->generateReturnArray(true, self::NOT_AUTHORIZED);
+        }
     }
 
     /**
@@ -97,12 +144,43 @@ class Schedule
      */
     public function removeItem($id)
     {
-        $result = $this->scheduleService->removeItemFromSchedule($id);
-        if ($result == ScheduleService::REMOVE_NON_EXISTENT) {
-            return $this->generateReturnArray(true, 'Item does not exist.');
-        }
+        $session = $this->sessionService->getNewSession();
+        if (!$session->isStarted()) $session->start();
+        $user = $session->get('user');
+        if ($user && $user['role'] == 5) {
+            $result = $this->scheduleService->removeItemFromSchedule($id);
+            if ($result == ScheduleService::REMOVE_NON_EXISTENT) {
+                return $this->generateReturnArray(true, self::ITEM_NOT_EXIST);
+            }
 
-        return $this->generateReturnArray(false, 'Item successfully removed.');
+            return $this->generateReturnArray(false, self::ITEM_REMOVED);
+        } else {
+            return $this->generateReturnArray(true, self::NOT_AUTHORIZED);
+        }
+    }
+
+    /**
+     * Update the site timezone
+     * @param string $timezone The timezone to set
+     * @return array Array containing boolean error value and message
+     */
+    public function updateTimezone($timezone) {
+        $session = $this->sessionService->getNewSession();
+        if (!$session->isStarted()) $session->start();
+        $user = $session->get('user');
+        if ($user && $user['role'] == 5) {
+            if ($this->timezoneService->isValidTimezone($timezone)) {
+                $this->timezoneService->setTimezone(
+                    $this->timezoneService->getPHPTimezone($timezone)
+                );
+
+                return $this->generateReturnArray(false, self::TIMEZONE_UPDATED);
+            } else {
+                return $this->generateReturnArray(true, self::INVALID_TIMEZONE);
+            }
+        } else {
+            return $this->generateReturnArray(true, self::NOT_AUTHORIZED);
+        }
     }
 
     /**

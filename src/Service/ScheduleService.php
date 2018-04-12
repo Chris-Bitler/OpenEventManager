@@ -3,6 +3,7 @@
 
 namespace App\Service;
 
+use App\Controller\ScheduleAdminController;
 use App\Controller\ScheduleController;
 use App\Utility\Database;
 use DateTimeZone;
@@ -26,7 +27,7 @@ class ScheduleService
     const UPDATE_SUCCESS = 1;
     const UPDATE_FAILED = 2;
 
-    const timeFormat = '';
+    const DATE_FORMAT = 'm-d-Y H:i T'; // Month/Day/Year Hour:Minute Timezone
 
     private $timezoneService;
 
@@ -47,7 +48,8 @@ class ScheduleService
             echo $e;
         }
         $this->repository = $repository ?: $this->entityManager->getRepository('App\Entity\ScheduleItem');
-        $this->timezoneService = $timezoneService;
+        $this->timezoneService = $timezoneService ?: new TimezoneService();
+        $this->timezoneService->setScheduleService($this);
     }
 
     /**
@@ -55,22 +57,25 @@ class ScheduleService
      * @param string $description The description of the schedule item to add
      * @param string $eventDateTime The number of seconds since epoch for the date/time of the event
      * @return ScheduleItem|int New ScheduleItem if inserted, INSERT_FAILED_IN_PAST otherwise.
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function addItemToSchedule($description, $eventDateTime)
     {
         $timeAdded = time();
 
+        $timezone = new DateTimeZone($this->timezoneService->getCurrentTimezone());
         // This converts the html5 time to a unix timestamp
-        $eventDateTime = \DateTime::createFromFormat(
-            ScheduleController::dateFormat,
-            $eventDateTime
+        $dateTime = \DateTime::createFromFormat(
+            ScheduleController::DATE_FORMAT,
+            $eventDateTime,
+            $timezone
         );
 
-        $eventDateTimestamp = $eventDateTime->getTimestamp();
-        $eventDateTime->setTimezone(new DateTimeZone($this->timezoneService->getCurrentTimezone()));
-        $eventDateTimeString = $eventDateTime->format(self::timeFormat);
+        $eventDateTimestamp = $dateTime->getTimestamp();
+        $eventDateTimeString = $dateTime->format(self::DATE_FORMAT);
 
-        if($eventDateTime >= $timeAdded) {
+        if($eventDateTimestamp >= $timeAdded) {
             $scheduleItem = new ScheduleItem($timeAdded, $description, $eventDateTimestamp, $eventDateTimeString);
             $this->entityManager->persist($scheduleItem);
             $this->entityManager->flush();
@@ -86,23 +91,29 @@ class ScheduleService
      * @param string $eventDateTime The new date/time for the event
      * @param int $id The ID of the event
      * @param bool $checkInPast Whether or not to check if the time is in the past
-     * @return int UPDATE_SUCCESS if true, otherwise false
+     * @return ScheduleItem|int Updated Schedule item if successfully updated, otherwise UPDATE_FAILED
      */
     public function update($description, $eventDateTime, $id, $checkInPast = true)
     {
         $timeUpdated = time();
 
+        $timezone = new DateTimeZone($this->timezoneService->getCurrentTimezone());
         // This converts the html5 time to a unix timestamp
-        $eventDateTime = \DateTime::createFromFormat(
-            ScheduleController::dateFormat,
-            $eventDateTime
-        );
+        if($checkInPast) {
+            $dateTime = \DateTime::createFromFormat(
+                ScheduleAdminController::DATE_FORMAT,
+                $eventDateTime,
+                $timezone
+            );
+        } else {
+            $dateTime = new \DateTime("@$eventDateTime");
+            $dateTime->setTimezone($timezone);
+        }
 
-        $eventDateTimestamp = $eventDateTime->getTimestamp();
-        $eventDateTime->setTimezone(new DateTimeZone($this->timezoneService->getCurrentTimezone()));
-        $eventDateTimeString = $eventDateTime->format(self::timeFormat);
+        $eventDateTimestamp = $dateTime->getTimestamp();
+        $eventDateTimeString = $dateTime->format(self::DATE_FORMAT);
 
-        if ($eventDateTime > $timeUpdated && $checkInPast) {
+        if ($eventDateTimestamp > $timeUpdated && $checkInPast || !$checkInPast) {
             $scheduleItem = $this->getItem($id);
             $scheduleItem->setDescription($description);
             $scheduleItem->setTimeAdded($timeUpdated);
@@ -110,7 +121,7 @@ class ScheduleService
             $scheduleItem->setDateTimeString($eventDateTimeString);
             $this->entityManager->flush();
 
-            return self::UPDATE_SUCCESS;
+            return $scheduleItem;
         }
 
         return self::UPDATE_FAILED;

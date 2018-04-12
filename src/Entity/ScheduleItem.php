@@ -6,14 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="settings")
+ * @ORM\Table(name="schedule")
  * @author Christopher Bitler
  */
 class ScheduleItem
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="string",name="`id`")
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      * @var string
      */
     private $id;
@@ -61,7 +62,7 @@ class ScheduleItem
      * Get the ID
      * @return string The ID of the schedule item
      */
-    public function getId(): string
+    public function getId()
     {
         return $this->id;
     }
