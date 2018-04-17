@@ -30,6 +30,14 @@
     margin-top: 10px;
 }
 
+#add-item-link {
+    cursor: pointer;
+}
+
 #name-reset-button {
     float: right;
+}
+
+[id^="dateString"],[id^="description"] {
+    vertical-align: middle !important;
 }

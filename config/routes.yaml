@@ -13,13 +13,21 @@ login:
   path: /login
   controller: App\Controller\LoginController::index
 
-index:
-  path: /
-  controller: App\Controller\IndexController::index
-
 theming:
   path: /admin/theming
   controller: App\Controller\ThemingController::index
+
+admin_schedule:
+  path: /admin/schedule
+  controller: App\Controller\ScheduleAdminController::index
+
+schedule:
+  path: /schedule
+  controller: App\Controller\ScheduleController::index
+
+index:
+  path: /
+  controller: App\Controller\IndexController::index
 
 _errors:
     resource: '@TwigBundle/Resources/config/routing/errors.xml'

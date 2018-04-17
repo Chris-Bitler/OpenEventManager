@@ -50,7 +50,7 @@
                     <a class="nav-link" href="services.html">Tournaments</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Schedule</a>
+                    <a class="nav-link" href="/schedule">Schedule</a>
                 </li>
                 <li class="nav-item">
                     <div style="width:30px;"></div>
@@ -73,6 +73,7 @@
                             {% if role is defined %}
                                 {% if role == 5 %}
                                     <a class="dropdown-item" href="/admin/theming">Admin</a>
+                                    <a class="dropdown-item" href="/admin/schedule">Schedule Admin</a>
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -102,6 +103,8 @@
     <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/rpc/Client.js') }}"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 {% endblock %}
 </body>
 

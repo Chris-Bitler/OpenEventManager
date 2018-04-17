@@ -18,6 +18,11 @@ class SettingsService
     private $entityManager;
     private $repository;
 
+    /**
+     * Create a new SettingsService instance
+     * @param EntityManager|null $entityManager The Doctrine Entity Manager
+     * @param EntityRepository|null $repository The Doctrine Entity Repository
+     */
     public function __construct(
         EntityManager $entityManager = null,
         EntityRepository $repository = null
@@ -83,9 +88,13 @@ class SettingsService
 
     /**
      * Update a setting with a new value
+     *
+     * Note: If the key doesn't exist it will insert it
+     *
      * @param string $key The key for the setting to update
      * @param string $value The value for the setting to update
-     * @throws \Exception If the setting does not exist
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function updateSetting($key, $value)
     {
@@ -95,7 +104,7 @@ class SettingsService
             $setting->setValue($value);
             $this->entityManager->flush();
         } else {
-            throw new \Exception('Attempt to update unknown setting');
+            $this->insertSetting($key, $value);
         }
     }
 }

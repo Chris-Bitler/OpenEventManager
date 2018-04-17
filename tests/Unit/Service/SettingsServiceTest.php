@@ -81,7 +81,8 @@ class SettingsServiceTest extends TestCase
         $repository = \Mockery::mock('Doctrine\ORM\EntityRepository');
         $manager = \Mockery::mock('Doctrine\ORM\EntityManager');
         $repository->shouldReceive('findOneBy')->andReturn(null);
-        $this->expectExceptionMessage('Attempt to update unknown setting');
+        $manager->shouldReceive('persist')->once();
+        $manager->shouldReceive('flush')->once();
         $settingService = new SettingsService($manager, $repository);
 
         $settingService->updateSetting('test', 'test');

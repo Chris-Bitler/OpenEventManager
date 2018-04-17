@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Service\SettingsService;
+use App\Service\TimezoneService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
@@ -25,9 +26,15 @@ class GlobalController extends Controller
      */
     public function setupGlobalVariables() {
         $settingsService = new SettingsService();
+        $timezoneService = new TimezoneService();
         $themeColor = $settingsService->getSetting('theme.color') ?: self::DEFAULT_COLOR;
         $themeTextColor = $settingsService->getSetting('theme.textColor');
         $siteName = $settingsService->getSetting('site.name') ?: self::DEFAULT_SITE_NAME;
+
+        // This is a bit of a hack to get the timezone abbreviation
+        $timezone = new \DateTimeZone($timezoneService->getCurrentTimezone());
+        $dateTime = new \DateTime("now", $timezone);
+        $timezoneString = $dateTime->format('T');
 
         // We can't use the ternary like above because the color can be '0'
         if ($themeTextColor === null) {
@@ -39,6 +46,8 @@ class GlobalController extends Controller
             'textColor' => $themeTextColor,
             'siteName' => $siteName
         );
+
+        $this->templateVariables['timezone'] = $timezoneString;
     }
     /**
      * Get the template variables

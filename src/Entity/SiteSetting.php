@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="settings")
+ * @author Christopher Bitler
  */
 class SiteSetting
 {

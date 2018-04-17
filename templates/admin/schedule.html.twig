@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        let curTimezone = '{{ curTimezone }}';
+    </script>
+    <script type="text/javascript" src="{{ asset('js/admin/ScheduleService.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container form-margins">
+        <!-- Page Heading/Breadcrumbs -->
+        <h1 class="mt-4 mb-3">Admin
+            <small>Schedule</small>
+        </h1>
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/admin">Admin</a>
+            </li>
+            <li class="breadcrumb-item active">Schedule</li>
+        </ol>
+
+        <div id="update-notify" class="alert"></div>
+
+        <div class="col-sm-12">
+            <table class="table" id="schedule-table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Options</th>
+                </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    {% for item in items %}
+                        <tr id="row-{{ item.id }}">
+                            <td id="description-{{ item.id }}">{{ item.description }}</td>
+                            <td id="dateString-{{ item.id }}" data->{{ item.dateTimeString }}</td>
+                            <td>
+                                <button id='edit-{{ item.id }}' data-id="{{ item.id }}" type="button" class="btn btn-default">
+                                    <i class='fas fa-edit'></i>
+                                </button>
+                                <button id='delete-{{ item.id }}' data-id="{{ item.id }}" type="button" class="btn btn-danger">
+                                    <i class='fas fa-trash'></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="button" id="add-item-btn" class="btn btn-primary btn-lg">Add schedule item</button>
+
+            <br><br>
+            <h5>Update Timezone</h5>
+            <select style="width:20%; margin-bottom: 10px" id="timezone">
+                {% for key in timezones|keys %}
+                    <option value="{{ key }}">{{ key }}</option>
+                {% endfor %}
+            </select><br>
+            <button type="button" id="update-timezone-btn" class="btn btn-default">Update timezone</button>
+        </div>
+        <br>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="add-item-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Schedule Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <label for="description">Description: </label>
+                        <input class='form-control' name="description" id="description"><br>
+                        <label for="date-time">Item Date/Time:</label>
+                        <input class='form-control' value='{{ dateTime }}' type="datetime-local" name="date-time" id="date-time">
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="add-item-modal-confirm" class="btn btn-primary">Add Item</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="edit-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Schedule Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <label for="description">Description: </label>
+                        <input class='form-control' name="description" id="description-edit"><br>
+                        <label for="date-time">Item Date/Time:</label>
+                        <input class='form-control' value='{{ dateTime }}' type="datetime-local" name="date-time" id="date-time-edit">
+                        <input type="hidden" id="edit-id" value="">
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="item-edit-modal-confirm" class="btn btn-primary">Edit Item</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="delete-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Schedule Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This will delete the schedule item that you clicked.
+                        <input type="hidden" id="delete-id" value="">
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="item-delete-modal-confirm" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ext/bootstrap-colorpicker.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.css" integrity="sha256-qkeO+BtgpANRnm6UfrclSLyB+QdfOK4qtspUK6qpnGk=" crossorigin="anonymous" />
+{% endblock %}
