@@ -116,6 +116,13 @@ class Schedule
         }
     }
 
+    /**
+     * Update a schedule item
+     * @param string $id Id of the item
+     * @param string $description The new description
+     * @param string $eventDateTime The new date/time
+     * @return array Array containing an error value and a message
+     */
     public function updateItem($id, $description, $eventDateTime)
     {
         $session = $this->sessionService->getNewSession();
@@ -126,7 +133,7 @@ class Schedule
             if(is_int($result) && $result == ScheduleService::UPDATE_FAILED) {
                 return $this->generateReturnArray(true, self::UPDATE_FAILED);
             } else {
-                return $this->generateReturnArray(false, self::UPDATE_SUCCESS,array(
+                return $this->generateReturnArray(false, self::UPDATE_SUCCESS, array(
                     'dateTimeString' => $result->getDateTimeString(),
                     'description' => $result->getDescription(),
                     'id' => $result->getId()
