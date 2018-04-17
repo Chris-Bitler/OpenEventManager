@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Controller\ScheduleController;
+use App\Controller\ScheduleAdminController;
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -43,8 +43,9 @@ class TimezoneService
      */
     public function convertEpochToTimeString($timestamp)
     {
-        $dateTime = new DateTime($timestamp, new DateTimeZone($this->getCurrentTimezone()));
-        return $dateTime->format(ScheduleController::DATE_FORMAT);
+        $dateTime = new DateTime("@$timestamp");
+        $dateTime->setTimezone(new DateTimeZone($this->getCurrentTimezone()));
+        return $dateTime->format(ScheduleAdminController::DATE_FORMAT);
     }
 
     /**
@@ -101,7 +102,11 @@ class TimezoneService
      */
     public function getPHPTimezone($friendlyTimezone)
     {
-        return $this->timezoneList[$friendlyTimezone];
+        if(key_exists($friendlyTimezone, $this->timezoneList)) {
+            return $this->timezoneList[$friendlyTimezone];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -111,7 +116,7 @@ class TimezoneService
      */
     public function isValidTimezone($timezone)
     {
-        return $this->timezoneList[$timezone] !== null;
+        return key_exists($timezone, $this->timezoneList);
     }
 
 

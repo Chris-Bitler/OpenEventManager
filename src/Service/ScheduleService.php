@@ -67,7 +67,7 @@ class ScheduleService
         $timezone = new DateTimeZone($this->timezoneService->getCurrentTimezone());
         // This converts the html5 time to a unix timestamp
         $dateTime = \DateTime::createFromFormat(
-            ScheduleController::DATE_FORMAT,
+            ScheduleAdminController::DATE_FORMAT,
             $eventDateTime,
             $timezone
         );
@@ -113,15 +113,19 @@ class ScheduleService
         $eventDateTimestamp = $dateTime->getTimestamp();
         $eventDateTimeString = $dateTime->format(self::DATE_FORMAT);
 
-        if ($eventDateTimestamp > $timeUpdated && $checkInPast || !$checkInPast) {
+        if (($eventDateTimestamp > $timeUpdated && $checkInPast) || !$checkInPast) {
             $scheduleItem = $this->getItem($id);
-            $scheduleItem->setDescription($description);
-            $scheduleItem->setTimeAdded($timeUpdated);
-            $scheduleItem->setDateTime($eventDateTimestamp);
-            $scheduleItem->setDateTimeString($eventDateTimeString);
-            $this->entityManager->flush();
+            if ($scheduleItem != null) {
+                $scheduleItem->setDescription($description);
+                $scheduleItem->setTimeAdded($timeUpdated);
+                $scheduleItem->setDateTime($eventDateTimestamp);
+                $scheduleItem->setDateTimeString($eventDateTimeString);
+                $this->entityManager->flush();
 
-            return $scheduleItem;
+                return $scheduleItem;
+            } else {
+                return self::UPDATE_FAILED;
+            }
         }
 
         return self::UPDATE_FAILED;
